@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "ironshulkerbox:lime_shulker_box",
+  "key": {
+    "M": "#c:ingots/copper",
+    "S": "minecraft:lime_shulker_box"
+  },
+  "pattern": [
+    "MMM",
+    "MSM",
+    "MMM"
+  ],
+  "result": {
+    "id": "ironshulkerbox:copper_shulker_box_lime"
+  }
+}
