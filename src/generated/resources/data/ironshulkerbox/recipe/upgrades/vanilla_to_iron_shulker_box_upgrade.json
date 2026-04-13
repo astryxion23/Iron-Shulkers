@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": "#c:ingots/iron",
+    "S": "minecraft:shulker_shell"
+  },
+  "pattern": [
+    "MMM",
+    "MSM",
+    "MMM"
+  ],
+  "result": {
+    "id": "ironshulkerbox:vanilla_to_iron_shulker_box_upgrade"
+  }
+}
