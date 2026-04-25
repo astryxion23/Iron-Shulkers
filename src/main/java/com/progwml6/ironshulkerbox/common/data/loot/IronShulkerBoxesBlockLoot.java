@@ -1,0 +1,83 @@
+package com.progwml6.ironshulkerbox.common.data.loot;
+
+import com.google.common.collect.ImmutableSet;
+import com.progwml6.ironshulkerbox.common.block.AbstractIronShulkerBoxBlock;
+import com.progwml6.ironshulkerbox.common.block.entity.AbstractIronShulkerBoxBlockEntity;
+import com.progwml6.ironshulkerbox.common.registraton.IronShulkerBoxesBlockEntityTypes;
+import com.progwml6.ironshulkerbox.common.registraton.IronShulkerBoxesBlocks;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.ContainerComponentManipulators;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction;
+import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class IronShulkerBoxesBlockLoot extends BlockLootSubProvider {
+
+  private static final Set<Item> EXPLOSION_RESISTANT = getExplosionResistance().stream().map(ItemLike::asItem).collect(Collectors.toSet());
+
+  public IronShulkerBoxesBlockLoot(HolderLookup.Provider registries) {
+    super(EXPLOSION_RESISTANT, FeatureFlags.REGISTRY.allFlags(), registries);
+  }
+
+  @Override
+  public void generate() {
+    this.add(IronShulkerBoxesBlocks.IRON_SHULKER_BOX, (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX));
+    this.add(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX, (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.GOLD_SHULKER_BOX));
+    this.add(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX, (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.DIAMOND_SHULKER_BOX));
+    this.add(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX, (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.COPPER_SHULKER_BOX));
+    this.add(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX, (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX));
+    this.add(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX, (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX));
+
+    for (DyeColor color : DyeColor.values()) {
+      this.add(IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color), (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX));
+      this.add(IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color), (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.GOLD_SHULKER_BOX));
+      this.add(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color), (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.DIAMOND_SHULKER_BOX));
+      this.add(IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color), (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.COPPER_SHULKER_BOX));
+      this.add(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color), (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX));
+      this.add(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color), (block) -> this.createShulkerBoxDrop(block, IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX));
+    }
+  }
+
+  protected LootTable.Builder createShulkerBoxDrop(Block pBlock, BlockEntityType<? extends AbstractIronShulkerBoxBlockEntity> blockEntityType) {
+    return LootTable.lootTable().withPool(this.applyExplosionCondition(pBlock, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
+      .add(LootItem.lootTableItem(pBlock).apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+        .apply(CopyCustomDataFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("Lock", "BlockEntityTag.Lock").copy("LootTable", "BlockEntityTag.LootTable").copy("LootTableSeed", "BlockEntityTag.LootTableSeed"))
+        .apply(SetContainerContents.setContents(ContainerComponentManipulators.CONTAINER).withEntry(DynamicLoot.dynamicEntry(AbstractIronShulkerBoxBlock.CONTENTS))))));
+  }
+
+  protected static Set<Block> getExplosionResistance() {
+    ImmutableSet.Builder<Block> blocks = new ImmutableSet.Builder<>();
+
+    blocks.add(IronShulkerBoxesBlocks.IRON_SHULKER_BOX);
+    blocks.add(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX);
+    blocks.add(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX);
+    blocks.add(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX);
+    blocks.add(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX);
+    blocks.add(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX);
+
+    IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.forEach((dyeColor, block) -> blocks.add(block));
+    IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.forEach((dyeColor, block) -> blocks.add(block));
+    IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.forEach((dyeColor, block) -> blocks.add(block));
+    IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.forEach((dyeColor, block) -> blocks.add(block));
+    IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.forEach((dyeColor, block) -> blocks.add(block));
+    IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.forEach((dyeColor, block) -> blocks.add(block));
+
+    return blocks.build();
+  }
+}

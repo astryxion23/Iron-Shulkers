@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": "#c:ingots/gold",
-    "S": "#c:ingots/iron"
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "S": {
+      "tag": "c:ingots/iron"
+    }
   },
   "pattern": [
     "MSM",
@@ -11,6 +15,7 @@
     "MMM"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:iron_to_gold_shulker_box_upgrade"
   }
 }

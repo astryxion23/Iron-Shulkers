@@ -1,0 +1,39 @@
+{
+	"schemaVersion": 1,
+	"id": "ironshulkerbox",
+	"version": "${version}",
+	"name": "Iron Shulker Boxes",
+	"description": "Iron Shulker Boxes for Fabric.",
+	"authors": ["progwml6"],
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.progwml6.ironshulkerbox.IronShulkerBoxes"
+		],
+		"client": [
+			"com.progwml6.ironshulkerbox.IronShulkerBoxesClient"
+		],
+		"fabric-datagen": [
+			"com.progwml6.ironshulkerbox.IronShulkerBoxesDataGenerator"
+		]
+	},
+	"mixins": [],
+	"depends": {
+		"fabricloader": ">=0.14.0",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"jei": "*"
+	},
+	"custom": {
+		"jei:plugins": [
+			{
+				"namespace": "ironshulkerbox",
+				"path": "jei_plugin"
+			}
+		]
+	}
+}

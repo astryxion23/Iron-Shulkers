@@ -3,8 +3,12 @@
   "category": "misc",
   "group": "ironshulkerbox:orange_shulker_box",
   "key": {
-    "G": "#c:glass_blocks",
-    "S": "ironshulkerbox:diamond_shulker_box_orange"
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "S": {
+      "item": "ironshulkerbox:diamond_shulker_box_orange"
+    }
   },
   "pattern": [
     "GGG",
@@ -12,6 +16,7 @@
     "GGG"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:crystal_shulker_box_orange"
   }
 }

@@ -2,8 +2,13 @@
   "sources": [
     {
       "type": "minecraft:directory",
-      "prefix": "model/",
-      "source": "model"
+      "source": "entity/shulker",
+      "prefix": "entity/shulker/"
+    },
+    {
+      "type": "minecraft:directory",
+      "source": "model",
+      "prefix": "model/"
     }
   ]
 }

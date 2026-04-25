@@ -3,9 +3,15 @@
   "category": "misc",
   "group": "ironshulkerbox:purple_shulker_box",
   "key": {
-    "G": "#c:glass_blocks",
-    "M": "#c:ingots/iron",
-    "S": "ironshulkerbox:copper_shulker_box_purple"
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "M": {
+      "tag": "c:ingots/iron"
+    },
+    "S": {
+      "item": "ironshulkerbox:copper_shulker_box_purple"
+    }
   },
   "pattern": [
     "MGM",
@@ -13,6 +19,7 @@
     "MGM"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:iron_shulker_box_purple"
   }
 }

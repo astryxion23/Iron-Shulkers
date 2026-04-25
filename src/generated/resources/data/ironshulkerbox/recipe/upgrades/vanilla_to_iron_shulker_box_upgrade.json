@@ -2,8 +2,12 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "M": "#c:ingots/iron",
-    "S": "minecraft:shulker_shell"
+    "M": {
+      "tag": "c:ingots/iron"
+    },
+    "S": {
+      "item": "minecraft:shulker_shell"
+    }
   },
   "pattern": [
     "MMM",
@@ -11,6 +15,7 @@
     "MMM"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:vanilla_to_iron_shulker_box_upgrade"
   }
 }
