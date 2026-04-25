@@ -12,7 +12,7 @@ import net.minecraft.world.inventory.ShulkerBoxSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class IronShulkerBoxMenu extends AbstractContainerMenu {
 
@@ -25,51 +25,51 @@ public class IronShulkerBoxMenu extends AbstractContainerMenu {
   }
 
   public static IronShulkerBoxMenu createIronContainer(int containerId, Inventory playerInventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.IRON_SHULKER_BOX.get(), containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.IRON.size), IronShulkerBoxesTypes.IRON);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.IRON_SHULKER_BOX, containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.IRON.size), IronShulkerBoxesTypes.IRON);
   }
 
   public static IronShulkerBoxMenu createIronContainer(int containerId, Inventory playerInventory, Container inventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.IRON_SHULKER_BOX.get(), containerId, playerInventory, inventory, IronShulkerBoxesTypes.IRON);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.IRON_SHULKER_BOX, containerId, playerInventory, inventory, IronShulkerBoxesTypes.IRON);
   }
 
   public static IronShulkerBoxMenu createGoldContainer(int containerId, Inventory playerInventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.GOLD_SHULKER_BOX.get(), containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.GOLD.size), IronShulkerBoxesTypes.GOLD);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.GOLD_SHULKER_BOX, containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.GOLD.size), IronShulkerBoxesTypes.GOLD);
   }
 
   public static IronShulkerBoxMenu createGoldContainer(int containerId, Inventory playerInventory, Container inventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.GOLD_SHULKER_BOX.get(), containerId, playerInventory, inventory, IronShulkerBoxesTypes.GOLD);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.GOLD_SHULKER_BOX, containerId, playerInventory, inventory, IronShulkerBoxesTypes.GOLD);
   }
 
   public static IronShulkerBoxMenu createDiamondContainer(int containerId, Inventory playerInventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.DIAMOND_SHULKER_BOX.get(), containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.DIAMOND.size), IronShulkerBoxesTypes.DIAMOND);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.DIAMOND_SHULKER_BOX, containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.DIAMOND.size), IronShulkerBoxesTypes.DIAMOND);
   }
 
   public static IronShulkerBoxMenu createDiamondContainer(int containerId, Inventory playerInventory, Container inventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.DIAMOND_SHULKER_BOX.get(), containerId, playerInventory, inventory, IronShulkerBoxesTypes.DIAMOND);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.DIAMOND_SHULKER_BOX, containerId, playerInventory, inventory, IronShulkerBoxesTypes.DIAMOND);
   }
 
   public static IronShulkerBoxMenu createCrystalContainer(int containerId, Inventory playerInventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.CRYSTAL_SHULKER_BOX.get(), containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.CRYSTAL.size), IronShulkerBoxesTypes.CRYSTAL);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.CRYSTAL_SHULKER_BOX, containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.CRYSTAL.size), IronShulkerBoxesTypes.CRYSTAL);
   }
 
   public static IronShulkerBoxMenu createCrystalContainer(int containerId, Inventory playerInventory, Container inventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.CRYSTAL_SHULKER_BOX.get(), containerId, playerInventory, inventory, IronShulkerBoxesTypes.CRYSTAL);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.CRYSTAL_SHULKER_BOX, containerId, playerInventory, inventory, IronShulkerBoxesTypes.CRYSTAL);
   }
 
   public static IronShulkerBoxMenu createCopperContainer(int containerId, Inventory playerInventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.COPPER_SHULKER_BOX.get(), containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.COPPER.size), IronShulkerBoxesTypes.COPPER);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.COPPER_SHULKER_BOX, containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.COPPER.size), IronShulkerBoxesTypes.COPPER);
   }
 
   public static IronShulkerBoxMenu createCopperContainer(int containerId, Inventory playerInventory, Container inventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.COPPER_SHULKER_BOX.get(), containerId, playerInventory, inventory, IronShulkerBoxesTypes.COPPER);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.COPPER_SHULKER_BOX, containerId, playerInventory, inventory, IronShulkerBoxesTypes.COPPER);
   }
 
   public static IronShulkerBoxMenu createObsidianContainer(int containerId, Inventory playerInventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.OBSIDIAN_SHULKER_BOX.get(), containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.OBSIDIAN.size), IronShulkerBoxesTypes.OBSIDIAN);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.OBSIDIAN_SHULKER_BOX, containerId, playerInventory, new SimpleContainer(IronShulkerBoxesTypes.OBSIDIAN.size), IronShulkerBoxesTypes.OBSIDIAN);
   }
 
   public static IronShulkerBoxMenu createObsidianContainer(int containerId, Inventory playerInventory, Container inventory) {
-    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.OBSIDIAN_SHULKER_BOX.get(), containerId, playerInventory, inventory, IronShulkerBoxesTypes.OBSIDIAN);
+    return new IronShulkerBoxMenu(IronShulkerBoxesMenuTypes.OBSIDIAN_SHULKER_BOX, containerId, playerInventory, inventory, IronShulkerBoxesTypes.OBSIDIAN);
   }
 
   protected IronShulkerBoxMenu(@Nullable MenuType<?> menuType, int containerId, Inventory playerInventory, Container inventory, IronShulkerBoxesTypes shulkerBoxTypes) {

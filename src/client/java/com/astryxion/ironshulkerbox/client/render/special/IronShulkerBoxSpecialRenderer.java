@@ -10,8 +10,9 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.ShulkerBoxRenderer;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.resources.model.sprite.SpriteId;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.ItemDisplayContext;
 import org.joml.Vector3fc;
 
 /**
@@ -24,9 +25,9 @@ public class IronShulkerBoxSpecialRenderer implements NoDataSpecialModelRenderer
 
   private final ShulkerBoxRenderer shulkerBoxRenderer;
   private final float openness;
-  private final SpriteId sprite;
+  private final Material sprite;
 
-  public IronShulkerBoxSpecialRenderer(ShulkerBoxRenderer shulkerBoxRenderer, float openness, SpriteId sprite) {
+  public IronShulkerBoxSpecialRenderer(ShulkerBoxRenderer shulkerBoxRenderer, float openness, Material sprite) {
     this.shulkerBoxRenderer = shulkerBoxRenderer;
     this.openness = openness;
     this.sprite = sprite;
@@ -34,6 +35,7 @@ public class IronShulkerBoxSpecialRenderer implements NoDataSpecialModelRenderer
 
   @Override
   public void submit(
+      ItemDisplayContext displayContext,
       PoseStack poseStack,
       SubmitNodeCollector submitNodeCollector,
       int lightCoords,
@@ -41,12 +43,20 @@ public class IronShulkerBoxSpecialRenderer implements NoDataSpecialModelRenderer
       boolean hasFoil,
       int outlineColor) {
     this.shulkerBoxRenderer.submit(
-        poseStack, submitNodeCollector, lightCoords, overlayCoords, this.openness, null, this.sprite, outlineColor);
+        poseStack,
+        submitNodeCollector,
+        lightCoords,
+        overlayCoords,
+        net.minecraft.core.Direction.UP,
+        this.openness,
+        null,
+        this.sprite,
+        outlineColor);
   }
 
   @Override
   public void getExtents(Consumer<Vector3fc> output) {
-    this.shulkerBoxRenderer.getExtents(this.openness, output);
+    this.shulkerBoxRenderer.getExtents(net.minecraft.core.Direction.UP, this.openness, output);
   }
 
   public record Unbaked(Identifier texture, float openness) implements NoDataSpecialModelRenderer.Unbaked {
@@ -64,8 +74,8 @@ public class IronShulkerBoxSpecialRenderer implements NoDataSpecialModelRenderer
 
     @Override
     public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
-      SpriteId spriteId = new SpriteId(Sheets.SHULKER_SHEET, this.texture);
-      return new IronShulkerBoxSpecialRenderer(new ShulkerBoxRenderer(context), this.openness, spriteId);
+      Material material = new Material(Sheets.SHULKER_SHEET, this.texture);
+      return new IronShulkerBoxSpecialRenderer(new ShulkerBoxRenderer(context), this.openness, material);
     }
   }
 }

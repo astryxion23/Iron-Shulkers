@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "ironshulkerbox",
+  "version": "${version}",
+  "name": "Iron Shulker Boxes",
+  "description": "Tiered shulker boxes (ported to Fabric).",
+  "authors": ["Astryxion"],
+  "license": "All Rights Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.astryxion.ironshulkerbox.IronShulkerBoxes"
+    ],
+    "client": [
+      "com.astryxion.ironshulkerbox.client.IronShulkerBoxesClientRegistration"
+    ],
+    "fabric-datagen": [
+      "com.astryxion.ironshulkerbox.IronShulkerBoxes"
+    ]
+  },
+  "accessWidener": "ironshulkerbox.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

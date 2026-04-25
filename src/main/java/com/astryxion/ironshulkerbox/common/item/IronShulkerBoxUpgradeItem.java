@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
 public class IronShulkerBoxUpgradeItem extends Item {
@@ -36,7 +35,7 @@ public class IronShulkerBoxUpgradeItem extends Item {
   }
 
   @Override
-  public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+  public InteractionResult useOn(UseOnContext context) {
     Player entityPlayer = context.getPlayer();
     BlockPos blockPos = context.getClickedPos();
     Level world = context.getLevel();
@@ -82,7 +81,7 @@ public class IronShulkerBoxUpgradeItem extends Item {
     NonNullList<ItemStack> shulkerBoxContents = NonNullList.withSize(27, ItemStack.EMPTY);
     Direction shulkerBoxFacing;
     DyeColor shulkerBoxColor;
-    BlockState iBlockState = IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get().defaultBlockState();
+    BlockState iBlockState = IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.defaultBlockState();
 
     if (blockEntity != null) {
       if (blockEntity instanceof AbstractIronShulkerBoxBlockEntity shulkerBox) {
@@ -147,12 +146,10 @@ public class IronShulkerBoxUpgradeItem extends Item {
 
     BlockEntity tileEntity2 = world.getBlockEntity(blockPos);
 
-    if (tileEntity2 instanceof AbstractIronShulkerBoxBlockEntity) {
-//      if (customName != null) {
-//        ((AbstractIronShulkerBoxBlockEntity) tileEntity2).setCustomName(customName);
-//      }
+    if (tileEntity2 instanceof AbstractIronShulkerBoxBlockEntity upgraded) {
+      upgraded.restoreCustomNameAfterUpgrade(customName);
 
-      ((AbstractIronShulkerBoxBlockEntity) tileEntity2).setItems(shulkerBoxContents);
+      upgraded.setItems(shulkerBoxContents);
     }
 
     if (!entityPlayer.getAbilities().instabuild) {

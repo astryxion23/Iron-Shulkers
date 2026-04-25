@@ -2,7 +2,7 @@ package com.astryxion.ironshulkerbox.client.screen;
 
 import com.astryxion.ironshulkerbox.common.block.IronShulkerBoxesTypes;
 import com.astryxion.ironshulkerbox.common.inventory.IronShulkerBoxMenu;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -18,16 +18,18 @@ public class IronShulkerBoxScreen extends AbstractContainerScreen<IronShulkerBox
   private final int textureYSize;
 
   public IronShulkerBoxScreen(IronShulkerBoxMenu container, Inventory playerInventory, Component title) {
-    super(container, playerInventory, title, container.getShulkerBoxType().xSize, container.getShulkerBoxType().ySize);
+    super(container, playerInventory, title);
 
     this.shulkerBoxesType = container.getShulkerBoxType();
     this.textureXSize = container.getShulkerBoxType().textureXSize;
     this.textureYSize = container.getShulkerBoxType().textureYSize;
+    this.imageWidth = this.shulkerBoxesType.xSize;
+    this.imageHeight = this.shulkerBoxesType.ySize;
+    this.inventoryLabelY = this.imageHeight - 94;
   }
 
   @Override
-  public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-    super.extractBackground(graphics, mouseX, mouseY, partialTick);
+  protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
 
     int x = (this.width - this.imageWidth) / 2;
     int y = (this.height - this.imageHeight) / 2;
@@ -46,10 +48,10 @@ public class IronShulkerBoxScreen extends AbstractContainerScreen<IronShulkerBox
   }
 
   @Override
-  protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+  protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
     // Must use opaque ARGB (e.g. 0xFF404040); legacy grey 4210752 is 0x00404040 and alpha 0 â€” 26.1 skips drawing (see GuiGraphicsExtractor.text).
     int labelColor = 0xFF404040;
-    graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, labelColor, false);
-    graphics.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, labelColor, false);
+    graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, labelColor, false);
+    graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, labelColor, false);
   }
 }

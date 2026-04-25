@@ -3,6 +3,7 @@ package com.astryxion.ironshulkerbox.common.jei;
 import com.astryxion.ironshulkerbox.IronShulkerBoxes;
 import com.astryxion.ironshulkerbox.common.block.AbstractIronShulkerBoxBlock;
 import com.astryxion.ironshulkerbox.common.block.IronShulkerBoxesTypes;
+import com.astryxion.ironshulkerbox.common.recipes.IronShulkerBoxesColoringRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -10,13 +11,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.core.NonNullList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,15 +42,17 @@ public final class ShulkerBoxColoringRecipeMaker {
 
       list.addAll(Arrays.stream(DyeColor.values())
           .map(color -> {
-            Stream<net.minecraft.world.item.Item> dyeItems = StreamSupport.stream(BuiltInRegistries.ITEM.getTagOrEmpty(color.getTag()).spliterator(), false).map(Holder::value);
+            Stream<net.minecraft.world.item.Item> dyeItems = StreamSupport.stream(BuiltInRegistries.ITEM.getTagOrEmpty(IronShulkerBoxesColoringRecipe.dyeTagForColor(color)).spliterator(), false).map(Holder::value);
             Ingredient colorIngredient = Ingredient.of(dyeItems);
-            List<Ingredient> inputs = List.of(baseShulkerIngredient, colorIngredient);
+            NonNullList<Ingredient> inputs = NonNullList.create();
+            inputs.add(baseShulkerIngredient);
+            inputs.add(colorIngredient);
             ItemStack output = AbstractIronShulkerBoxBlock.getColoredItemStack(color, AbstractIronShulkerBoxBlock.getTypeFromItem(baseShulkerStack.getItem()));
             Identifier id = Identifier.fromNamespaceAndPath(IronShulkerBoxes.MODID, group + "." + output.getItem().getDescriptionId().replace(':', '/'));
             CraftingRecipe recipe = new ShapelessRecipe(
-                new Recipe.CommonInfo(false),
-                new CraftingRecipe.CraftingBookInfo(CraftingBookCategory.MISC, group),
-                ItemStackTemplate.fromNonEmptyStack(output),
+                group,
+                CraftingBookCategory.MISC,
+                output,
                 inputs);
             ResourceKey<Recipe<?>> key = ResourceKey.create(Registries.RECIPE, id);
             return new RecipeHolder<>(key, recipe);

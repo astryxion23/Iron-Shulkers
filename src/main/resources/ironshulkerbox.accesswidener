@@ -1,0 +1,5 @@
+accessWidener	v1	named
+
+accessible class net/minecraft/core/cauldron/CauldronInteraction$Dispatcher
+accessible method net/minecraft/core/cauldron/CauldronInteraction$Dispatcher put (Lnet/minecraft/world/item/Item;Lnet/minecraft/core/cauldron/CauldronInteraction;)V
+accessible method net/minecraft/core/cauldron/CauldronInteraction$Dispatcher put (Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/cauldron/CauldronInteraction;)V

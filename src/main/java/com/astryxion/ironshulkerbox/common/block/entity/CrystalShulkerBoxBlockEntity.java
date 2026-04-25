@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class CrystalShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEntity implements ICrystalShulkerBox {
 
@@ -24,13 +24,13 @@ public class CrystalShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEnt
   private boolean hadStuff;
 
   public CrystalShulkerBoxBlockEntity(BlockPos pPos, BlockState pState) {
-    super(IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX.get(), pPos, pState, IronShulkerBoxesTypes.CRYSTAL);
+    super(IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX, pPos, pState, IronShulkerBoxesTypes.CRYSTAL);
 
     this.topStacks = NonNullList.withSize(8, ItemStack.EMPTY);
   }
 
   public CrystalShulkerBoxBlockEntity(@Nullable DyeColor pColor, BlockPos blockPos, BlockState blockState) {
-    super(IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX.get(), blockPos, blockState, pColor, IronShulkerBoxesTypes.CRYSTAL);
+    super(IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX, blockPos, blockState, pColor, IronShulkerBoxesTypes.CRYSTAL);
 
     this.topStacks = NonNullList.withSize(8, ItemStack.EMPTY);
   }
@@ -104,14 +104,14 @@ public class CrystalShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEnt
   @Override
   public Block getBlockToUse() {
     if (this.getColor() == null) {
-      return IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get();
+      return IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX;
     } else {
-      return IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(this.getColor()).get();
+      return IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(this.getColor());
     }
   }
 
   public static void buildBlocks(ImmutableSet.Builder<Block> builder) {
-    builder.add(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get());
-    IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.forEach((dyeColor, block) -> builder.add(block.get()));
+    builder.add(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX);
+    IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.forEach((dyeColor, block) -> builder.add(block));
   }
 }

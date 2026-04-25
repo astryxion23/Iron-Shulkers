@@ -1,37 +1,37 @@
 package com.astryxion.ironshulkerbox.common.data;
 
-import com.astryxion.ironshulkerbox.IronShulkerBoxes;
 import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesBlocks;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
+
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 
 import java.util.concurrent.CompletableFuture;
 
-public class IronShulkerBoxesBlockTags extends BlockTagsProvider {
+public class IronShulkerBoxesBlockTags extends FabricTagProvider.BlockTagProvider {
 
-  public IronShulkerBoxesBlockTags(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup) {
-    super(output, lookup, IronShulkerBoxes.MODID);
+  public IronShulkerBoxesBlockTags(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
+    super(output, registryLookupFuture);
   }
 
   @Override
   protected void addTags(HolderLookup.Provider provider) {
-    var shulkerBoxes = this.tag(BlockTags.SHULKER_BOXES);
+    var shulkerBoxes = valueLookupBuilder(BlockTags.SHULKER_BOXES);
 
     shulkerBoxes.add(
-        IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get(),
-        IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.get(),
-        IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.get(),
-        IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get(),
-        IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get(),
-        IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get());
+        IronShulkerBoxesBlocks.IRON_SHULKER_BOX,
+        IronShulkerBoxesBlocks.GOLD_SHULKER_BOX,
+        IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX,
+        IronShulkerBoxesBlocks.COPPER_SHULKER_BOX,
+        IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX,
+        IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX);
 
-    IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block.get()));
-    IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block.get()));
-    IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block.get()));
-    IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block.get()));
-    IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block.get()));
-    IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block.get()));
+    IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block));
+    IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block));
+    IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block));
+    IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block));
+    IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block));
+    IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.forEach((dyeColor, block) -> shulkerBoxes.add(block));
   }
 }

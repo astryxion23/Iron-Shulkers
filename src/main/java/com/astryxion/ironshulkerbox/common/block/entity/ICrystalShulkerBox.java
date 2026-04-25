@@ -5,12 +5,15 @@ import com.astryxion.ironshulkerbox.common.network.TopStacksSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.network.PacketDistributor;
 
-import javax.annotation.Nullable;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+
+import org.jetbrains.annotations.Nullable;
 
 public interface ICrystalShulkerBox {
 
@@ -42,7 +45,10 @@ public interface ICrystalShulkerBox {
     NonNullList<ItemStack> stacks = this.buildItemStackDataList();
 
     if (this.getChestLevel() != null && this.getChestLevel() instanceof ServerLevel serverLevel && !this.getChestLevel().isClientSide()) {
-      PacketDistributor.sendToPlayersTrackingChunk(serverLevel, serverLevel.getChunkAt(this.getChestWorldPosition()).getPos(), new TopStacksSyncPacket(this.getChestWorldPosition(), stacks));
+      TopStacksSyncPacket packet = new TopStacksSyncPacket(this.getChestWorldPosition(), stacks);
+      for (ServerPlayer player : PlayerLookup.tracking(serverLevel, serverLevel.getChunkAt(this.getChestWorldPosition()).getPos())) {
+        ServerPlayNetworking.send(player, packet);
+      }
     }
   }
 

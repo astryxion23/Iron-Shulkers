@@ -21,7 +21,7 @@ public class ObsidianShulkerBoxBlock extends AbstractIronShulkerBoxBlock {
   );
 
   public ObsidianShulkerBoxBlock(Properties properties, @Nullable DyeColor color) {
-    super(properties, color, IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX::get, IronShulkerBoxesTypes.OBSIDIAN);
+    super(properties, color, () -> IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX, IronShulkerBoxesTypes.OBSIDIAN);
   }
 
   @Override

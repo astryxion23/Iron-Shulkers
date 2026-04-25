@@ -5,6 +5,8 @@ import com.astryxion.ironshulkerbox.common.block.IronShulkerBoxesTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -32,7 +34,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -244,7 +246,7 @@ public abstract class AbstractIronShulkerBoxBlockEntity extends RandomizableCont
   @Override
   public boolean canPlaceItemThroughFace(int pIndex, ItemStack pItemStack, @Nullable Direction pDirection) {
     Block block = Block.byItem(pItemStack.getItem());
-    return !(block instanceof ShulkerBoxBlock) && !(block instanceof AbstractIronShulkerBoxBlock) && pItemStack.canFitInsideContainerItems();
+    return !(block instanceof ShulkerBoxBlock) && !(block instanceof AbstractIronShulkerBoxBlock) && pItemStack.getItem().canFitInsideContainerItems();
   }
 
   /**
@@ -283,6 +285,15 @@ public abstract class AbstractIronShulkerBoxBlockEntity extends RandomizableCont
   }
 
   public abstract Block getBlockToUse();
+
+  public void restoreCustomNameAfterUpgrade(@Nullable Component customName) {
+    if (customName != null) {
+      this.applyComponents(
+          this.components(),
+          DataComponentPatch.builder().set(DataComponents.CUSTOM_NAME, customName).build());
+      this.setChanged();
+    }
+  }
 
   public static int getOpenCount(BlockGetter blockGetter, BlockPos blockPos) {
     BlockState blockstate = blockGetter.getBlockState(blockPos);

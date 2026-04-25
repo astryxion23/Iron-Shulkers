@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 public enum IronShulkerBoxesTypes implements StringRepresentable {
@@ -86,22 +86,22 @@ public enum IronShulkerBoxesTypes implements StringRepresentable {
   public static Block get(IronShulkerBoxesTypes type, @Nullable DyeColor color) {
     if (color == null) {
       return switch (type) {
-        case IRON -> IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get();
-        case GOLD -> IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.get();
-        case DIAMOND -> IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.get();
-        case CRYSTAL -> IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get();
-        case COPPER -> IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get();
-        case OBSIDIAN -> IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get();
+        case IRON -> IronShulkerBoxesBlocks.IRON_SHULKER_BOX;
+        case GOLD -> IronShulkerBoxesBlocks.GOLD_SHULKER_BOX;
+        case DIAMOND -> IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX;
+        case CRYSTAL -> IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX;
+        case COPPER -> IronShulkerBoxesBlocks.COPPER_SHULKER_BOX;
+        case OBSIDIAN -> IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX;
         default -> Blocks.SHULKER_BOX;
       };
     } else {
       return switch (type) {
-        case IRON -> IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color).get();
-        case GOLD -> IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color).get();
-        case DIAMOND -> IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color).get();
-        case CRYSTAL -> IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color).get();
-        case COPPER -> IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color).get();
-        case OBSIDIAN -> IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color).get();
+        case IRON -> IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color);
+        case GOLD -> IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color);
+        case DIAMOND -> IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color);
+        case CRYSTAL -> IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color);
+        case COPPER -> IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color);
+        case OBSIDIAN -> IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color);
         default -> switch (color) {
           case WHITE -> Blocks.WHITE_SHULKER_BOX;
           case ORANGE -> Blocks.ORANGE_SHULKER_BOX;
