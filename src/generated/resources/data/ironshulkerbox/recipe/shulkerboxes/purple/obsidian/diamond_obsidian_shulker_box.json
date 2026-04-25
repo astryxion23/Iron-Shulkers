@@ -3,8 +3,12 @@
   "category": "misc",
   "group": "ironshulkerbox:purple_shulker_box",
   "key": {
-    "M": "minecraft:obsidian",
-    "S": "ironshulkerbox:diamond_shulker_box_purple"
+    "M": {
+      "item": "minecraft:obsidian"
+    },
+    "S": {
+      "item": "ironshulkerbox:diamond_shulker_box_purple"
+    }
   },
   "pattern": [
     "MMM",
@@ -12,6 +16,7 @@
     "MMM"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:obsidian_shulker_box_purple"
   }
 }

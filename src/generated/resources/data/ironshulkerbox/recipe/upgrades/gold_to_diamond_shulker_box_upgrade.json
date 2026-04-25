@@ -2,9 +2,15 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": "#c:glass_blocks",
-    "M": "#c:gems/diamond",
-    "S": "#c:ingots/gold"
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "S": {
+      "tag": "c:ingots/gold"
+    }
   },
   "pattern": [
     "GMG",
@@ -12,6 +18,7 @@
     "GMG"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:gold_to_diamond_shulker_box_upgrade"
   }
 }

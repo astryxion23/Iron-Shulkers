@@ -3,8 +3,12 @@
   "category": "misc",
   "group": "ironshulkerbox:light_blue_shulker_box",
   "key": {
-    "M": "#c:ingots/gold",
-    "S": "ironshulkerbox:iron_shulker_box_light_blue"
+    "M": {
+      "tag": "c:ingots/gold"
+    },
+    "S": {
+      "item": "ironshulkerbox:iron_shulker_box_light_blue"
+    }
   },
   "pattern": [
     "MMM",
@@ -12,6 +16,7 @@
     "MMM"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:gold_shulker_box_light_blue"
   }
 }

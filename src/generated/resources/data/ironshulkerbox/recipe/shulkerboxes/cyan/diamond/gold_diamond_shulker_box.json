@@ -3,9 +3,15 @@
   "category": "misc",
   "group": "ironshulkerbox:cyan_shulker_box",
   "key": {
-    "G": "#c:glass_blocks",
-    "M": "#c:gems/diamond",
-    "S": "ironshulkerbox:gold_shulker_box_cyan"
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "M": {
+      "tag": "c:gems/diamond"
+    },
+    "S": {
+      "item": "ironshulkerbox:gold_shulker_box_cyan"
+    }
   },
   "pattern": [
     "GGG",
@@ -13,6 +19,7 @@
     "GGG"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:diamond_shulker_box_cyan"
   }
 }

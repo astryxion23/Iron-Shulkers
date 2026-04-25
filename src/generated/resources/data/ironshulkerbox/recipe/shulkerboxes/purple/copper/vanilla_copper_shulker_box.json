@@ -3,8 +3,12 @@
   "category": "misc",
   "group": "ironshulkerbox:purple_shulker_box",
   "key": {
-    "M": "#c:ingots/copper",
-    "S": "minecraft:purple_shulker_box"
+    "M": {
+      "tag": "c:ingots/copper"
+    },
+    "S": {
+      "item": "minecraft:purple_shulker_box"
+    }
   },
   "pattern": [
     "MMM",
@@ -12,6 +16,7 @@
     "MMM"
   ],
   "result": {
+    "count": 1,
     "id": "ironshulkerbox:copper_shulker_box_purple"
   }
 }
