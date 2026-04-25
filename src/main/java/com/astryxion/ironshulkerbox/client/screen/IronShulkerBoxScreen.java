@@ -21,18 +21,17 @@ public class IronShulkerBoxScreen extends AbstractContainerScreen<IronShulkerBox
     super(container, playerInventory, title);
 
     this.shulkerBoxesType = container.getShulkerBoxType();
+    this.imageWidth = container.getShulkerBoxType().xSize;
+    this.imageHeight = container.getShulkerBoxType().ySize;
+    this.inventoryLabelY = this.imageHeight - 94;
     this.textureXSize = container.getShulkerBoxType().textureXSize;
     this.textureYSize = container.getShulkerBoxType().textureYSize;
-    this.imageWidth = this.shulkerBoxesType.xSize;
-    this.imageHeight = this.shulkerBoxesType.ySize;
-    this.inventoryLabelY = this.imageHeight - 94;
   }
 
   @Override
   protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-
-    int x = (this.width - this.imageWidth) / 2;
-    int y = (this.height - this.imageHeight) / 2;
+    int x = this.leftPos;
+    int y = this.topPos;
 
     graphics.blit(
         RenderPipelines.GUI_TEXTURED,
@@ -49,7 +48,6 @@ public class IronShulkerBoxScreen extends AbstractContainerScreen<IronShulkerBox
 
   @Override
   protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
-    // Must use opaque ARGB (e.g. 0xFF404040); legacy grey 4210752 is 0x00404040 and alpha 0 â€” 26.1 skips drawing (see GuiGraphicsExtractor.text).
     int labelColor = 0xFF404040;
     graphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, labelColor, false);
     graphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, labelColor, false);

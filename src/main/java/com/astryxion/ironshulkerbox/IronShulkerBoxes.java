@@ -6,36 +6,43 @@ import com.astryxion.ironshulkerbox.common.creativetabs.IronShulkerBoxesCreative
 import com.astryxion.ironshulkerbox.common.data.IronShulkerBoxesBlockTags;
 import com.astryxion.ironshulkerbox.common.data.IronShulkerBoxesLanguageProvider;
 import com.astryxion.ironshulkerbox.common.data.IronShulkerBoxesRecipeProvider;
-import com.astryxion.ironshulkerbox.common.data.loot.IronShulkerBoxesBlockLoot;
+import com.astryxion.ironshulkerbox.common.data.loot.IronShulkerBoxesLootTableProvider;
 import com.astryxion.ironshulkerbox.common.network.TopStacksSyncPacket;
+import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesBlockEntityTypes;
 import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesBlocks;
 import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesItems;
+import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesMenuTypes;
+import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesRecipes;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.ShulkerBoxDispenseBehavior;
+import net.minecraft.data.PackOutput;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.transfer.item.ItemAccessItemHandler;
+import net.neoforged.neoforge.transfer.item.WorldlyContainerWrapper;
+import net.neoforged.neoforge.event.BlockEntityTypeAddBlocksEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
-import net.fabricmc.fabric.impl.transfer.item.ItemContainerContentsStorage;
+import java.util.concurrent.CompletableFuture;
 
-import com.google.common.collect.ImmutableMap;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class IronShulkerBoxes implements ModInitializer, DataGeneratorEntrypoint {
+@Mod(IronShulkerBoxes.MODID)
+public class IronShulkerBoxes {
 
   public static final String MODID = "ironshulkerbox";
 
@@ -52,12 +59,12 @@ public class IronShulkerBoxes implements ModInitializer, DataGeneratorEntrypoint
 
       if (type != null) {
         newItemStack = switch (type) {
-          case IRON -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.IRON_SHULKER_BOX, 1);
-          case GOLD -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX, 1);
-          case DIAMOND -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX, 1);
-          case COPPER -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX, 1);
-          case CRYSTAL -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX, 1);
-          case OBSIDIAN -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX, 1);
+          case IRON -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get(), 1);
+          case GOLD -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.get(), 1);
+          case DIAMOND -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.get(), 1);
+          case COPPER -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get(), 1);
+          case CRYSTAL -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get(), 1);
+          case OBSIDIAN -> itemStack.transmuteCopy(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get(), 1);
           case VANILLA -> itemStack.transmuteCopy(Blocks.SHULKER_BOX, 1);
         };
       }
@@ -71,70 +78,107 @@ public class IronShulkerBoxes implements ModInitializer, DataGeneratorEntrypoint
     return InteractionResult.SUCCESS;
   };
 
-  @Override
-  public void onInitialize() {
-    PayloadTypeRegistry.playS2C().register(TopStacksSyncPacket.TYPE, TopStacksSyncPacket.STREAM_CODEC);
+  public IronShulkerBoxes(IEventBus modEventBus) {
+    // General mod setup
+    modEventBus.addListener(this::setup);
+    modEventBus.addListener(this::gatherDataServer);
+    modEventBus.addListener(this::gatherDataClient);
+    modEventBus.addListener(this::setupPackets);
+    modEventBus.addListener(this::registerCapabilities);
+    modEventBus.addListener(IronShulkerBoxesCreativeTabs::buildCreativeModeTabContents);
+    modEventBus.addListener(IronShulkerBoxesBlockEntityTypes::addValidBlocks);
 
-    // Ensure class loading order: registries and creative tab
-    var ignoredBlocks = IronShulkerBoxesBlocks.IRON_SHULKER_BOX;
-    var ignoredItems = IronShulkerBoxesItems.UPGRADES;
-    var ignoredTab = IronShulkerBoxesCreativeTabs.IRON_SHULKER_BOX_TAB_KEY;
-
-    registerItemStorages();
-
-    DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.IRON_SHULKER_BOX.asItem(), new ShulkerBoxDispenseBehavior());
-    DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.asItem(), new ShulkerBoxDispenseBehavior());
-    DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.asItem(), new ShulkerBoxDispenseBehavior());
-    DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.asItem(), new ShulkerBoxDispenseBehavior());
-    DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.asItem(), new ShulkerBoxDispenseBehavior());
-    DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.asItem(), new ShulkerBoxDispenseBehavior());
-
-    CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.IRON_SHULKER_BOX.asItem(), SHULKER_BOX);
-    CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.asItem(), SHULKER_BOX);
-    CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.asItem(), SHULKER_BOX);
-    CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.asItem(), SHULKER_BOX);
-    CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.asItem(), SHULKER_BOX);
-    CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.asItem(), SHULKER_BOX);
-
-    for (DyeColor color : DyeColor.values()) {
-      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color).asItem(), SHULKER_BOX);
-      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color).asItem(), SHULKER_BOX);
-      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color).asItem(), SHULKER_BOX);
-      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color).asItem(), SHULKER_BOX);
-      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color).asItem(), SHULKER_BOX);
-      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color).asItem(), SHULKER_BOX);
-
-      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color).asItem(), new ShulkerBoxDispenseBehavior());
-      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color).asItem(), new ShulkerBoxDispenseBehavior());
-      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color).asItem(), new ShulkerBoxDispenseBehavior());
-      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color).asItem(), new ShulkerBoxDispenseBehavior());
-      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color).asItem(), new ShulkerBoxDispenseBehavior());
-      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color).asItem(), new ShulkerBoxDispenseBehavior());
-    }
+    // Registry objects
+    IronShulkerBoxesBlocks.BLOCKS.register(modEventBus);
+    IronShulkerBoxesItems.ITEMS.register(modEventBus);
+    IronShulkerBoxesBlockEntityTypes.BLOCK_ENTITIES.register(modEventBus);
+    IronShulkerBoxesMenuTypes.MENU_TYPES.register(modEventBus);
+    IronShulkerBoxesRecipes.RECIPE_SERIALIZERS.register(modEventBus);
+    IronShulkerBoxesCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
   }
 
-  private static void registerItemStorages() {
-    ItemStorage.ITEM.registerForItems((stack, ctx) -> new ItemContainerContentsStorage(ctx, IronShulkerBoxesTypes.IRON.size), itemsForType(IronShulkerBoxesBlocks.IRON_SHULKER_BOX, IronShulkerBoxesBlocks.IRON_SHULKER_BOXES));
-    ItemStorage.ITEM.registerForItems((stack, ctx) -> new ItemContainerContentsStorage(ctx, IronShulkerBoxesTypes.GOLD.size), itemsForType(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX, IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES));
-    ItemStorage.ITEM.registerForItems((stack, ctx) -> new ItemContainerContentsStorage(ctx, IronShulkerBoxesTypes.DIAMOND.size), itemsForType(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX, IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES));
-    ItemStorage.ITEM.registerForItems((stack, ctx) -> new ItemContainerContentsStorage(ctx, IronShulkerBoxesTypes.COPPER.size), itemsForType(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX, IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES));
-    ItemStorage.ITEM.registerForItems((stack, ctx) -> new ItemContainerContentsStorage(ctx, IronShulkerBoxesTypes.CRYSTAL.size), itemsForType(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX, IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES));
-    ItemStorage.ITEM.registerForItems((stack, ctx) -> new ItemContainerContentsStorage(ctx, IronShulkerBoxesTypes.OBSIDIAN.size), itemsForType(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX, IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES));
+  private void setup(final FMLCommonSetupEvent event) {
+    event.enqueueWork(() -> {
+      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get().asItem(), new ShulkerBoxDispenseBehavior());
+      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.get().asItem(), new ShulkerBoxDispenseBehavior());
+      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.get().asItem(), new ShulkerBoxDispenseBehavior());
+      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get().asItem(), new ShulkerBoxDispenseBehavior());
+      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get().asItem(), new ShulkerBoxDispenseBehavior());
+      DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get().asItem(), new ShulkerBoxDispenseBehavior());
+
+      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get().asItem(), SHULKER_BOX);
+      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.get().asItem(), SHULKER_BOX);
+      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.get().asItem(), SHULKER_BOX);
+      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get().asItem(), SHULKER_BOX);
+      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get().asItem(), SHULKER_BOX);
+      CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get().asItem(), SHULKER_BOX);
+
+      for (DyeColor color : DyeColor.values()) {
+        CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color).get().asItem(), SHULKER_BOX);
+        CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color).get().asItem(), SHULKER_BOX);
+        CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color).get().asItem(), SHULKER_BOX);
+        CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color).get().asItem(), SHULKER_BOX);
+        CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color).get().asItem(), SHULKER_BOX);
+        CauldronInteraction.WATER.map().put(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color).get().asItem(), SHULKER_BOX);
+
+        DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(color).get().asItem(), new ShulkerBoxDispenseBehavior());
+        DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.get(color).get().asItem(), new ShulkerBoxDispenseBehavior());
+        DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.get(color).get().asItem(), new ShulkerBoxDispenseBehavior());
+        DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.get(color).get().asItem(), new ShulkerBoxDispenseBehavior());
+        DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.get(color).get().asItem(), new ShulkerBoxDispenseBehavior());
+        DispenserBlock.registerBehavior(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(color).get().asItem(), new ShulkerBoxDispenseBehavior());
+      }
+    });
   }
 
-  private static Item[] itemsForType(Block base, ImmutableMap<DyeColor, ? extends Block> colored) {
-    List<Item> list = new ArrayList<>();
-    list.add(base.asItem());
-    colored.values().forEach(b -> list.add(b.asItem()));
-    return list.toArray(Item[]::new);
+  private void gatherDataServer(GatherDataEvent.Server event) {
+    addServerDataProviders(event);
   }
 
-  @Override
-  public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
-    FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-    pack.addProvider(IronShulkerBoxesLanguageProvider::new);
-    pack.addProvider(IronShulkerBoxesBlockLoot::new);
-    pack.addProvider(IronShulkerBoxesRecipeProvider.Runner::new);
-    pack.addProvider(IronShulkerBoxesBlockTags::new);
+  /**
+   * Default {@code runData} uses {@code clientData()}, which only posts {@link GatherDataEvent.Client}.
+   * Server-only data (recipes, loot, tags) must be registered here too, or those files are never generated.
+   */
+  private void gatherDataClient(GatherDataEvent.Client event) {
+    PackOutput packOutput = event.getGenerator().getPackOutput();
+    event.addProvider(new IronShulkerBoxesLanguageProvider(packOutput, "en_us"));
+    addServerDataProviders(event);
+  }
+
+  private static void addServerDataProviders(GatherDataEvent event) {
+    PackOutput packOutput = event.getGenerator().getPackOutput();
+    CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+    event.addProvider(new IronShulkerBoxesLootTableProvider(packOutput, lookupProvider));
+    event.addProvider(new IronShulkerBoxesRecipeProvider.Runner(packOutput, lookupProvider));
+    event.addProvider(new IronShulkerBoxesBlockTags(packOutput, lookupProvider));
+  }
+
+  public void setupPackets(RegisterPayloadHandlersEvent event) {
+    PayloadRegistrar registrar = event.registrar(MODID).versioned("1.0.0").optional();
+
+    registrar.playToClient(TopStacksSyncPacket.TYPE, TopStacksSyncPacket.STREAM_CODEC);
+  }
+
+  public void registerCapabilities(RegisterCapabilitiesEvent event) {
+    event.registerBlockEntity(Capabilities.Item.BLOCK, IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX.get(), WorldlyContainerWrapper::new);
+    event.registerBlockEntity(Capabilities.Item.BLOCK, IronShulkerBoxesBlockEntityTypes.GOLD_SHULKER_BOX.get(), WorldlyContainerWrapper::new);
+    event.registerBlockEntity(Capabilities.Item.BLOCK, IronShulkerBoxesBlockEntityTypes.DIAMOND_SHULKER_BOX.get(), WorldlyContainerWrapper::new);
+    event.registerBlockEntity(Capabilities.Item.BLOCK, IronShulkerBoxesBlockEntityTypes.COPPER_SHULKER_BOX.get(), WorldlyContainerWrapper::new);
+    event.registerBlockEntity(Capabilities.Item.BLOCK, IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX.get(), WorldlyContainerWrapper::new);
+    event.registerBlockEntity(Capabilities.Item.BLOCK, IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX.get(), WorldlyContainerWrapper::new);
+
+    IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.forEach((dyeColor, block) -> event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.IRON.size), block.get()));
+    IronShulkerBoxesBlocks.GOLD_SHULKER_BOXES.forEach((dyeColor, block) -> event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.GOLD.size), block.get()));
+    IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOXES.forEach((dyeColor, block) -> event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.DIAMOND.size), block.get()));
+    IronShulkerBoxesBlocks.COPPER_SHULKER_BOXES.forEach((dyeColor, block) -> event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.COPPER.size), block.get()));
+    IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOXES.forEach((dyeColor, block) -> event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.CRYSTAL.size), block.get()));
+    IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.forEach((dyeColor, block) -> event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.OBSIDIAN.size), block.get()));
+
+    event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.IRON.size), IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get());
+    event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.GOLD.size), IronShulkerBoxesBlocks.GOLD_SHULKER_BOX.get());
+    event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.DIAMOND.size), IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX.get());
+    event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.COPPER.size), IronShulkerBoxesBlocks.COPPER_SHULKER_BOX.get());
+    event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.CRYSTAL.size), IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX.get());
+    event.registerItem(Capabilities.Item.ITEM, (stack, access) -> new ItemAccessItemHandler(access, DataComponents.CONTAINER, IronShulkerBoxesTypes.OBSIDIAN.size), IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get());
   }
 }

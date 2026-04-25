@@ -5,61 +5,58 @@ import com.astryxion.ironshulkerbox.common.block.IronShulkerBoxesTypes;
 import com.astryxion.ironshulkerbox.common.item.IronShulkerBoxesUpgradeType;
 import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesBlocks;
 import com.astryxion.ironshulkerbox.common.registraton.IronShulkerBoxesItems;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.DyeColor;
-
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
-
+import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.apache.commons.lang3.text.WordUtils;
 
-public class IronShulkerBoxesLanguageProvider extends FabricLanguageProvider {
+public class IronShulkerBoxesLanguageProvider extends LanguageProvider {
 
-  public IronShulkerBoxesLanguageProvider(FabricDataOutput output, java.util.concurrent.CompletableFuture<HolderLookup.Provider> registryLookup) {
-    super(output, registryLookup);
+  public IronShulkerBoxesLanguageProvider(PackOutput output, String locale) {
+    super(output, IronShulkerBoxes.MODID, locale);
   }
 
   @Override
-  public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
-    this.addShulkerBox(translationBuilder, IronShulkerBoxesTypes.IRON);
-    this.addShulkerBox(translationBuilder, IronShulkerBoxesTypes.GOLD);
-    this.addShulkerBox(translationBuilder, IronShulkerBoxesTypes.DIAMOND);
-    this.addShulkerBox(translationBuilder, IronShulkerBoxesTypes.COPPER);
-    this.addShulkerBox(translationBuilder, IronShulkerBoxesTypes.CRYSTAL);
-    this.addShulkerBox(translationBuilder, IronShulkerBoxesTypes.OBSIDIAN);
+  protected void addTranslations() {
+    this.addShulkerBox(IronShulkerBoxesTypes.IRON);
+    this.addShulkerBox(IronShulkerBoxesTypes.GOLD);
+    this.addShulkerBox(IronShulkerBoxesTypes.DIAMOND);
+    this.addShulkerBox(IronShulkerBoxesTypes.COPPER);
+    this.addShulkerBox(IronShulkerBoxesTypes.CRYSTAL);
+    this.addShulkerBox(IronShulkerBoxesTypes.OBSIDIAN);
 
-    translationBuilder.add(IronShulkerBoxesBlocks.IRON_SHULKER_BOX, "Iron Shulker Box");
-    translationBuilder.add(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX, "Gold Shulker Box");
-    translationBuilder.add(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX, "Diamond Shulker Box");
-    translationBuilder.add(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX, "Copper Shulker Box");
-    translationBuilder.add(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX, "Crystal Shulker Box");
-    translationBuilder.add(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX, "Obsidian Shulker Box");
+    this.addBlock(IronShulkerBoxesBlocks.IRON_SHULKER_BOX, "Iron Shulker Box");
+    this.addBlock(IronShulkerBoxesBlocks.GOLD_SHULKER_BOX, "Gold Shulker Box");
+    this.addBlock(IronShulkerBoxesBlocks.DIAMOND_SHULKER_BOX, "Diamond Shulker Box");
+    this.addBlock(IronShulkerBoxesBlocks.COPPER_SHULKER_BOX, "Copper Shulker Box");
+    this.addBlock(IronShulkerBoxesBlocks.CRYSTAL_SHULKER_BOX, "Crystal Shulker Box");
+    this.addBlock(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX, "Obsidian Shulker Box");
 
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.IRON_TO_GOLD), "Iron to Gold Shulker Box Upgrade");
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.GOLD_TO_DIAMOND), "Gold to Diamond Shulker Box Upgrade");
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.COPPER_TO_IRON), "Copper to Iron Shulker Box Upgrade");
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.DIAMOND_TO_CRYSTAL), "Diamond to Crystal Shulker Box Upgrade");
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.VANILLA_TO_IRON), "Vanilla to Iron Shulker Box Upgrade");
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.VANILLA_TO_COPPER), "Vanilla to Copper Shulker Box Upgrade");
-    translationBuilder.add(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.DIAMOND_TO_OBSIDIAN), "Diamond to Obsidian Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.IRON_TO_GOLD), "Iron to Gold Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.GOLD_TO_DIAMOND), "Gold to Diamond Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.COPPER_TO_IRON), "Copper to Iron Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.DIAMOND_TO_CRYSTAL), "Diamond to Crystal Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.VANILLA_TO_IRON), "Vanilla to Iron Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.VANILLA_TO_COPPER), "Vanilla to Copper Shulker Box Upgrade");
+    this.addItem(IronShulkerBoxesItems.UPGRADES.get(IronShulkerBoxesUpgradeType.DIAMOND_TO_OBSIDIAN), "Diamond to Obsidian Shulker Box Upgrade");
 
-    translationBuilder.add("item.ironshulkerbox.shulker_box_upgrade.upgrade", "Used to upgrade a %s Shulker Box to a %s Shulker Box.");
-    translationBuilder.add("item.ironshulkerbox.shulker_box_upgrade.color", "The color of the Shulker Box will stay the same.");
+    this.add("item.ironshulkerbox.shulker_box_upgrade.upgrade", "Used to upgrade a %s Shulker Box to a %s Shulker Box.");
+    this.add("item.ironshulkerbox.shulker_box_upgrade.color", "The color of the Shulker Box will stay the same.");
 
-    translationBuilder.add("ironshulkerbox.iron", "Iron");
-    translationBuilder.add("ironshulkerbox.gold", "Gold");
-    translationBuilder.add("ironshulkerbox.diamond", "Diamond");
-    translationBuilder.add("ironshulkerbox.crystal", "Crystal");
-    translationBuilder.add("ironshulkerbox.copper", "Copper");
-    translationBuilder.add("ironshulkerbox.obsidian", "Obsidian");
-    translationBuilder.add("ironshulkerbox.vanilla", "Vanilla");
+    this.add("ironshulkerbox.iron", "Iron");
+    this.add("ironshulkerbox.gold", "Gold");
+    this.add("ironshulkerbox.diamond", "Diamond");
+    this.add("ironshulkerbox.crystal", "Crystal");
+    this.add("ironshulkerbox.copper", "Copper");
+    this.add("ironshulkerbox.obsidian", "Obsidian");
+    this.add("ironshulkerbox.vanilla", "Vanilla");
 
-    translationBuilder.add("itemGroup.ironshulkerbox", "Iron Shulker Boxes");
+    this.add("itemGroup.ironshulkerbox", "Iron Shulker Boxes");
   }
 
-  public void addShulkerBox(TranslationBuilder translationBuilder, IronShulkerBoxesTypes type) {
+  public void addShulkerBox(IronShulkerBoxesTypes type) {
     for (DyeColor color : DyeColor.values()) {
-      translationBuilder.add("block.ironshulkerbox." + type.getEnglishName().toLowerCase() + "_shulker_box_" + color.getName(), WordUtils.capitalize(color.getName().replace('_', ' ')) + " " + WordUtils.capitalize(type.getEnglishName().toLowerCase()) + " Shulker Box");
+      this.add("block.ironshulkerbox." + type.getEnglishName().toLowerCase() + "_shulker_box_" + color.getName(), WordUtils.capitalize(color.getName().replace('_', ' ')) + " " + WordUtils.capitalize(type.getEnglishName().toLowerCase()) + " Shulker Box");
     }
   }
 }

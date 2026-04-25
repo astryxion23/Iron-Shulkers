@@ -24,7 +24,7 @@ public class CrystalShulkerBoxBlock extends AbstractIronShulkerBoxBlock {
   );
 
   public CrystalShulkerBoxBlock(Properties properties, @Nullable DyeColor color) {
-    super(properties, color, () -> IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX, IronShulkerBoxesTypes.CRYSTAL);
+    super(properties, color, IronShulkerBoxesBlockEntityTypes.CRYSTAL_SHULKER_BOX::get, IronShulkerBoxesTypes.CRYSTAL);
   }
 
   @Override

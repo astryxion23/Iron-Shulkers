@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Direction;
@@ -33,7 +34,7 @@ import org.joml.Vector3f;
 import java.util.Arrays;
 import java.util.List;
 
-public class IronShulkerBoxRenderer<T extends AbstractIronShulkerBoxBlockEntity> implements BlockEntityRenderer<T, IronShulkerBoxRenderer.IronShulkerBoxRenderState> {
+public class IronShulkerBoxRenderer implements BlockEntityRenderer<AbstractIronShulkerBoxBlockEntity, IronShulkerBoxRenderer.IronShulkerBoxRenderState> {
 
   private static final List<ModelItem> MODEL_ITEMS = Arrays.asList(
     new ModelItem(new Vector3f(0.3F, 0.45F, 0.3F), 3.0F),
@@ -61,7 +62,7 @@ public class IronShulkerBoxRenderer<T extends AbstractIronShulkerBoxBlockEntity>
   }
 
   @Override
-  public void extractRenderState(T blockEntity, IronShulkerBoxRenderState renderState, float partialTick, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+  public void extractRenderState(AbstractIronShulkerBoxBlockEntity blockEntity, IronShulkerBoxRenderState renderState, float partialTick, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
     BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPos, crumblingOverlay);
 
     renderState.partialTick = partialTick;
@@ -82,7 +83,7 @@ public class IronShulkerBoxRenderer<T extends AbstractIronShulkerBoxBlockEntity>
     } else {
       textureLocation = IronShulkerBoxesModels.chooseShulkerBoxTexture(boxType, dyecolor.getId());
     }
-    renderState.sprite = new Material(Sheets.SHULKER_SHEET, textureLocation);
+    renderState.material = new Material(Sheets.SHULKER_SHEET, textureLocation);
     renderState.progress = blockEntity.getProgress(partialTick);
 
     renderState.crystalFloatingItems = boxType.isTransparent()
@@ -127,8 +128,7 @@ public class IronShulkerBoxRenderer<T extends AbstractIronShulkerBoxBlockEntity>
   }
 
   @Override
-  public void submit(IronShulkerBoxRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, net.minecraft.client.renderer.state.CameraRenderState camera) {
-    poseStack.pushPose();
+  public void submit(IronShulkerBoxRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
     this.shulkerDelegate.submit(
         poseStack,
         submitNodeCollector,
@@ -137,9 +137,8 @@ public class IronShulkerBoxRenderer<T extends AbstractIronShulkerBoxBlockEntity>
         renderState.direction,
         renderState.progress,
         renderState.breakProgress,
-        renderState.sprite,
+        renderState.material,
         0);
-    poseStack.popPose();
 
     if (renderState.crystalFloatingItems) {
       float rotation = (float) (360.0 * ((System.currentTimeMillis() & 0x3FFFL) / (double) 0x3FFFL)) - renderState.partialTick;
@@ -172,7 +171,7 @@ public class IronShulkerBoxRenderer<T extends AbstractIronShulkerBoxBlockEntity>
   public static final class IronShulkerBoxRenderState extends BlockEntityRenderState {
     Direction direction = Direction.UP;
     float progress;
-    Material sprite = Sheets.DEFAULT_SHULKER_TEXTURE_LOCATION;
+    Material material = Sheets.DEFAULT_SHULKER_TEXTURE_LOCATION;
     boolean crystalFloatingItems;
     float partialTick;
     final ItemStackRenderState[] crystalItemStates = new ItemStackRenderState[MODEL_ITEMS.size() - 1];

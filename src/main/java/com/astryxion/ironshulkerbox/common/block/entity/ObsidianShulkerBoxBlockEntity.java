@@ -12,16 +12,16 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class ObsidianShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEntity {
 
   public ObsidianShulkerBoxBlockEntity(BlockPos pPos, BlockState pState) {
-    super(IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX, pPos, pState, IronShulkerBoxesTypes.OBSIDIAN);
+    super(IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX.get(), pPos, pState, IronShulkerBoxesTypes.OBSIDIAN);
   }
 
   public ObsidianShulkerBoxBlockEntity(@Nullable DyeColor pColor, BlockPos blockPos, BlockState blockState) {
-    super(IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX, blockPos, blockState, pColor, IronShulkerBoxesTypes.OBSIDIAN);
+    super(IronShulkerBoxesBlockEntityTypes.OBSIDIAN_SHULKER_BOX.get(), blockPos, blockState, pColor, IronShulkerBoxesTypes.OBSIDIAN);
   }
 
   @Override
@@ -32,14 +32,14 @@ public class ObsidianShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEn
   @Override
   public Block getBlockToUse() {
     if (this.getColor() == null) {
-      return IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX;
+      return IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get();
     } else {
-      return IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(this.getColor());
+      return IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.get(this.getColor()).get();
     }
   }
 
   public static void buildBlocks(ImmutableSet.Builder<Block> builder) {
-    builder.add(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX);
-    IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.forEach((dyeColor, block) -> builder.add(block));
+    builder.add(IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOX.get());
+    IronShulkerBoxesBlocks.OBSIDIAN_SHULKER_BOXES.forEach((dyeColor, block) -> builder.add(block.get()));
   }
 }

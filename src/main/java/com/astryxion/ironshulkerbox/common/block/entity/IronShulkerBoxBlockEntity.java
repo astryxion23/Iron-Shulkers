@@ -12,16 +12,16 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import org.jetbrains.annotations.Nullable;
+import javax.annotation.Nullable;
 
 public class IronShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEntity {
 
   public IronShulkerBoxBlockEntity(BlockPos pPos, BlockState pState) {
-    super(IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX, pPos, pState, IronShulkerBoxesTypes.IRON);
+    super(IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX.get(), pPos, pState, IronShulkerBoxesTypes.IRON);
   }
 
   public IronShulkerBoxBlockEntity(@Nullable DyeColor pColor, BlockPos blockPos, BlockState blockState) {
-    super(IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX, blockPos, blockState, pColor, IronShulkerBoxesTypes.IRON);
+    super(IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX.get(), blockPos, blockState, pColor, IronShulkerBoxesTypes.IRON);
   }
 
   @Override
@@ -32,14 +32,14 @@ public class IronShulkerBoxBlockEntity extends AbstractIronShulkerBoxBlockEntity
   @Override
   public Block getBlockToUse() {
     if (this.getColor() == null) {
-      return IronShulkerBoxesBlocks.IRON_SHULKER_BOX;
+      return IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get();
     } else {
-      return IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(this.getColor());
+      return IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.get(this.getColor()).get();
     }
   }
 
   public static void buildBlocks(ImmutableSet.Builder<Block> builder) {
-    builder.add(IronShulkerBoxesBlocks.IRON_SHULKER_BOX);
-    IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.forEach((dyeColor, block) -> builder.add(block));
+    builder.add(IronShulkerBoxesBlocks.IRON_SHULKER_BOX.get());
+    IronShulkerBoxesBlocks.IRON_SHULKER_BOXES.forEach((dyeColor, block) -> builder.add(block.get()));
   }
 }

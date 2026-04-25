@@ -1,6 +1,8 @@
 package com.astryxion.ironshulkerbox.common.network;
 
 import com.astryxion.ironshulkerbox.IronShulkerBoxes;
+import com.astryxion.ironshulkerbox.common.block.entity.ICrystalShulkerBox;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -9,6 +11,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.List;
 
@@ -43,16 +48,26 @@ public class TopStacksSyncPacket implements CustomPacketPayload {
     ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buf, this.topItemStacks);
   }
 
-  public BlockPos blockPos() {
-    return this.blockPos;
-  }
-
-  public NonNullList<ItemStack> topItemStacks() {
-    return this.topItemStacks;
-  }
-
   @Override
   public Type<? extends CustomPacketPayload> type() {
     return TYPE;
+  }
+
+  public static void handle(TopStacksSyncPacket msg, IPayloadContext ctx) {
+    if (ctx.flow().isClientbound()) {
+      ctx.enqueueWork(() -> {
+        Level level = ctx.player().level();
+
+        BlockEntity blockEntity = level.getBlockEntity(msg.blockPos);
+
+        if (blockEntity != null) {
+          if (blockEntity instanceof ICrystalShulkerBox) {
+            ((ICrystalShulkerBox) blockEntity).receiveMessageFromServer(msg.topItemStacks);
+
+            Minecraft.getInstance().levelRenderer.blockChanged(null, msg.blockPos, null, null, 0);
+          }
+        }
+      });
+    }
   }
 }

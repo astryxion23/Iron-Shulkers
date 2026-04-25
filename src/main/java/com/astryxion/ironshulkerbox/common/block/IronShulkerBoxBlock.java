@@ -21,7 +21,7 @@ public class IronShulkerBoxBlock extends AbstractIronShulkerBoxBlock {
   );
 
   public IronShulkerBoxBlock(Properties properties, @Nullable DyeColor color) {
-    super(properties, color, () -> IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX, IronShulkerBoxesTypes.IRON);
+    super(properties, color, IronShulkerBoxesBlockEntityTypes.IRON_SHULKER_BOX::get, IronShulkerBoxesTypes.IRON);
   }
 
   @Override
