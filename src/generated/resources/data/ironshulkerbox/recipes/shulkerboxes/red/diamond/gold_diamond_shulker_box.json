@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "ironshulkerbox:red_shulker_box",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "M": {
+      "tag": "c:diamonds"
+    },
+    "S": {
+      "item": "ironshulkerbox:gold_shulker_box_red"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "MSM",
+    "GGG"
+  ],
+  "result": {
+    "item": "ironshulkerbox:diamond_shulker_box_red"
+  },
+  "show_notification": true
+}

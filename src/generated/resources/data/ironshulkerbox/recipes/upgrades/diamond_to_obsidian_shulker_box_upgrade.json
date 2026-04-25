@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "M": {
+      "item": "minecraft:obsidian"
+    }
+  },
+  "pattern": [
+    "MGM",
+    "MMM",
+    "MMM"
+  ],
+  "result": {
+    "item": "ironshulkerbox:diamond_to_obsidian_shulker_box_upgrade"
+  },
+  "show_notification": true
+}
